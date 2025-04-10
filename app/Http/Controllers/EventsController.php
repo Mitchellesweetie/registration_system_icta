@@ -18,7 +18,6 @@ class EventsController extends Controller
     {
         $userId = Auth::id();
     
-        // Fetch all events for the user
         $event = Events::all();
         return view('pages.events', compact('event'));
     }
@@ -34,30 +33,9 @@ class EventsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    // public function store(Request $request)
-    // {
-    //     //
-    //     $this->validate($request, [
-    //         'event_name' => 'required|string|max:200',
-    //         'event_description' => 'required|max:200000',
-    //     ]);
-    //     $userId = Auth::id(); 
-    //     // Create a new user
-    //     $event = new Events;
-    //     $event->event_name = $request->input('event_name');
-    //     $event->event_description = $request->input('event_description');
-    //     $event->user_id = $userId;
-    //     $event->save();
     
-    //     // return redirect('/events')->with('success', 'Event Created.');
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Event saved successfully',
-    //     ]); 
-    // }
     public function store(Request $request)
 {
-    // Ensure the user is authenticated
     if (!Auth::check()) {
         return response()->json([
             'success' => false,
@@ -65,15 +43,13 @@ class EventsController extends Controller
         ], 401);
     }
 
-    // Validate event data
     $this->validate($request, [
         'event_name' => 'required|string|max:200',
         'event_description' => 'required|string|max:2000',
-        'questions' => 'nullable|array',  // Validate questions if provided
-        'questions.*' => 'string|max:500', // Validate each question
+        'questions' => 'nullable|array', 
+        'questions.*' => 'string|max:500',
     ]);
 
-    // Create the event
     $userId = Auth::id();
     $event = new Events();
     $event->event_name = $request->input('event_name');
@@ -81,16 +57,15 @@ class EventsController extends Controller
     $event->user_id = $userId;
 
     try {
-        $event->save();  // Save the event and get the ID
+        $event->save(); 
 
-        // Now save the associated questions
         if ($request->has('questions') && is_array($request->input('questions'))) {
             $questions = $request->input('questions');
             
             foreach ($questions as $question) {
                 EventForms::create([
                     'questions' => $question,
-                    'events_id' => $event->id,  // Use the event's ID
+                    'events_id' => $event->id,  
                     'user_id' => $userId,
                 ]);
             }
@@ -99,11 +74,10 @@ class EventsController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Event and questions saved successfully.',
-            'event' => $event,  // Return the event data for further processing if needed
+            'event' => $event,  
         ]);
 
     } catch (\Exception $e) {
-        // Handle exceptions and log the error
         \Log::error('Error saving event or questions: ' . $e->getMessage());
 
         return response()->json([

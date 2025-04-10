@@ -31,13 +31,13 @@
             <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
                 <div class="col mx-auto">
                     <div class="mb-4 text-center">
-                        <img src="./User Login ICTA_files/logo-img.png" width="100%" alt="">
+                        {{-- <img src="./User Login ICTA_files/logo-img.png" width="100%" alt=""> --}}
                     </div>
                     <div class="card">
                         <div class="card-body">
                             <div class="border p-4 rounded">
                                 <div class="text-center">
-                                    <h3 class="">ICT Authority</h3>
+                                    <h3 class="">Event Registration System</h3>
 
 
 
@@ -87,7 +87,7 @@
                                      
                                         <div class="col-12">
                                             <div class="d-grid">
-                                                <button type="submit" class="btn btn-primary"><i class="bx bxs-lock-open"></i>Sign up</button>
+                                                <button type="submit" class="btn  btn-primary" ><i class="bx bxs-lock-open"></i>Sign up</button>
                                             </div>
                                         </div>
                                     </form>

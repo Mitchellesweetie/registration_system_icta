@@ -295,7 +295,7 @@
 
             const formHtml = `
                 <div class="experience-entry" id="${formId}">
-                    <h5>Experience Entry ${formCount}</h5>
+                    <h5>Event Entry ${formCount}</h5>
                     <div class="form-group">
                         <label for="company-${formId}">Events</label>
                         <input type="text" class="form-control" id="company-${formId}" required>
@@ -307,8 +307,8 @@
                   
                     <div class="roles-container" id="roles-${formId}" style="padding:10px;">
                         <div class="form-group role-entry">
-                            <label for="role-${formId}-1">Role 1</label>
-                            <input type="text" class="form-control" id="role-${formId}-1" placeholder="Enter a role">
+                            <label for="role-${formId}-1">Question 1</label>
+                            <input type="text" class="form-control" id="role-${formId}-1" placeholder="Enter a question">
                         </div>
                     </div>
                     <button class="btn btn-info btn-add-role" onclick="addRole('${formId}')" style="padding:10px;">+ Add Questions</button>
@@ -332,8 +332,8 @@
             
             const roleHtml = `
                 <div class="form-group role-entry">
-                    <label for="role-${formId}-${roleCount}">Role ${roleCount}</label>
-                    <input type="text" class="form-control" id="role-${formId}-${roleCount}" placeholder="Enter a role">
+                    <label for="role-${formId}-${roleCount}">Question ${roleCount}</label>
+                    <input type="text" class="form-control" id="role-${formId}-${roleCount}" placeholder="Enter a question">
                 </div>
             `;
             rolesContainer.insertAdjacentHTML('beforeend', roleHtml);
@@ -344,22 +344,19 @@
     const formData = {
         event_name: document.getElementById(`company-${formId}`).value,
         event_description: document.getElementById(`position-${formId}`).value,
-        questions: [] // Rename questions to roles
+        questions: [] 
     };
 
-    // Collect all roles for the experience entry
     const rolesContainer = document.getElementById(`roles-${formId}`);
     const roleInputs = rolesContainer.getElementsByTagName('input');
     for (let i = 0; i < roleInputs.length; i++) {
         if (roleInputs[i].value.trim()) {
-            formData.questions.push(roleInputs[i].value.trim()); // Collect roles
+            formData.questions.push(roleInputs[i].value.trim()); 
         }
     }
 
-    // Log the form data to verify
     console.log("Form Data:", formData);
 
-    // Validate form data
     if (!validateForm(formData)) {
         alert('Please fill in all required fields');
         return;
@@ -375,7 +372,7 @@
     })
     .then(response => {
     if (!response.ok) {
-        console.log('Status:', response.status);  // Log the status
+        console.log('Status:', response.status);
         throw new Error('Network response was not ok');
     }
     return response.json();

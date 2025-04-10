@@ -26,7 +26,7 @@ use App\Http\Controllers\QrCodeGeneratorController;
 
 Route::get('/', function () {
     return view('pages.index');
-})->name('index');
+})->name('index')->middleware('auth');;
 Route::get('/admin', function () {
     return view('pages.Admin Dashboard');
 });
@@ -60,5 +60,12 @@ Route::get('/reports',[ReportController::class,'reports'])->name('reports')->mid
 
 
 //QRController
-Route::get('/qr', [QrCodeGeneratorController::class, 'generate']);
+Route::get('/qr/{eventId}', [QrCodeGeneratorController::class, 'generate'])->name('generate')->middleware('auth');;
+Route::get('/qrform/{id}', [QrCodeGeneratorController::class, 'qrform'])->middleware('auth');;
+Route::get('/event/{id}', [QrCodeGeneratorController::class, 'selected'])->middleware('auth');
+
+//AnswerController
+
+
+
 

@@ -58,28 +58,12 @@
     <div class="container text-center">
         <div class="row">
             <div class="col">
-                <p class="mb-0">Simple</p>
-                {!! $simple !!}
+                <p class="mb-0">Scan me</p>
+                {{ $qrCode}}
             </div>
+            <a href=" {{ $url }}"> click me</a>
           
-            <div class="col">
-                <p class="mb-0">Background Color Change </p>
-                {!! $changeBgColor !!}
-            </div>
-        </div>
-        <div class="row mt-5">
-            <div class="col">
-                <p class="mb-0">Style Square</p>
-                {!! $styleSquare !!}
-            </div>
-            <div class="col">
-                <p class="mb-0">Style Dot</p>
-                {!! $styleDot !!}
-            </div>
-            <div class="col">
-                <p class="mb-0">Style Round</p>
-                {!! $styleRound !!}
-            </div>
+           
         </div>
        
     </div>

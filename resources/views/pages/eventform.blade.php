@@ -268,6 +268,9 @@
         </div>
       </header>
       <div class="container">
+
+      
+
         <h2 class="text-center">Event Calendar</h2>
         <div id="experienceForms"></div>
         <div class="d-flex justify-content-between">
@@ -380,6 +383,20 @@
     .then(data => {
         if (data.success) {
             displaySavedEntry(formData);
+            // alert('Data saved successfully.');
+        //     const alertBox = document.getElementById('alert');
+        // alertBox.style.display = 'flex'; // Show the alert
+
+        // // Automatically hide the alert after 3 seconds
+        // setTimeout(() => {
+        //     alertBox.style.display = 'none';
+        // }, 3000);
+        Swal.fire({
+            icon: 'success',
+            title: 'Data saved successfully!',
+            showConfirmButton: false,
+            timer: 1500
+        });
 
 
             document.getElementById(formId).remove();
@@ -392,7 +409,12 @@
     })
     .catch(error => {
         console.log('Error saving event details:', error);
-        alert('An error occurred while saving your event details. Please try again.');
+        // alert('An error occurred while saving your event details. Please try again.');
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "An error occurred while saving.Please try again.'",
+});
     });
 }
 
@@ -410,11 +432,11 @@ function validateForm(formData) {
                     <strong>${entry.event_name}</strong><br>
                     Event Descriptions: ${entry.event_description}<br>
                     Questions: ${entry.questions.join(', ')}<br>
-                      <a href="" class="btn btn-primary">View</a>
-                       <a href="" class="btn btn-warning">Edit</a>
                 </div>
               
             `;
+                                  //  <a href="" class="btn btn-warning">Edit</a>
+
             document.getElementById('savedEntries').insertAdjacentHTML('beforeend', entryHtml);
         }
 
@@ -511,5 +533,7 @@ function validateForm(formData) {
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   </body>
 </html>

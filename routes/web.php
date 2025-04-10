@@ -7,7 +7,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\EventForms;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\QrCodeGeneratorController;
-
+use App\Http\Controllers\ResponseController;
 
 
 
@@ -60,11 +60,13 @@ Route::get('/reports',[ReportController::class,'reports'])->name('reports')->mid
 
 
 //QRController
-Route::get('/qr/{eventId}', [QrCodeGeneratorController::class, 'generate'])->name('generate')->middleware('auth');;
+Route::get('/qr/{eventId}', [QrCodeGeneratorController::class, 'generate'])->name('generate')->middleware('auth');
 Route::get('/qrform/{id}', [QrCodeGeneratorController::class, 'qrform'])->middleware('auth');;
 Route::get('/event/{id}', [QrCodeGeneratorController::class, 'selected'])->middleware('auth');
 
+
 //AnswerController
+Route::post('/postaction/{id}',[ResponseController::class,'questionsresponse'])->name('questionsresponse');
 
 
 

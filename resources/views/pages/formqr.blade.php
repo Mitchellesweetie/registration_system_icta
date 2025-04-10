@@ -25,7 +25,24 @@
 </head>
 <body>
   <div class="form-wrapper">
-    <form  method="POST">
+    @if ($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@elseif(session('success'))
+    <div class="alert alert-succes alert-dismissible fade show">
+        <ul>
+            <li>{{ session('success') }}</li>
+        </ul>
+    </div>
+@endif
+@foreach ($event as $events)
+    <form  method="POST" action="{{ route('questionsresponse',$events->id)}}">
+      {{-- <form action="" method="post"></form> --}}
       @csrf
 
       <h3 class="text-center mb-4">{{ $event->first()->event_name ?? 'Event' }}</h3>
@@ -44,6 +61,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
     </form>
+    @endforeach
   </div>
 </body>
 </html>

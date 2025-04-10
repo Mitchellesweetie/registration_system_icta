@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Events;
 use App\Models\EventForms;
+use Illuminate\Support\Facades\DB;
+
 
 
 
@@ -91,14 +93,20 @@ class EventsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
-    {
-        //
-        $event=Events::find($id);
+    public function show($id) {
+        $event = DB::table('events')
+            ->where('id', $id)
+            ->first();
+            
         if (!$event) {
-            return redirect('/events')->with('error', 'Event not found.');
+            return redirect()->route('events.index')->with('error', 'Event not found.');
         }
-        return view('pages.eventsedit', ['event' => $event]);
+        
+        $formQuestions = DB::table('event_forms')
+            ->where('events_id', $id)
+            ->get();
+    
+        return view('pages.eventsedit', compact('event', 'formQuestions'));
     }
 
     /**
@@ -114,28 +122,80 @@ class EventsController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    // public function update(Request $request, string $id)
+    // {
+    //     // Validate the input
+    //     $this->validate($request, [
+    //         'event_name' => 'required|string|max:200', 
+    //         'event_description' => 'required|string|max:200000',
+    //     ]);
+    
+    //     $event = Events::find($id);
+    
+    //     if (!$event) {
+    //         return redirect()->route('events.index')->with('error', 'Event not found');
+    //     }
+    
+    //     $event->event_name = $request->input('event_name'); 
+    //     $event->event_description = $request->input('event_description');  
+    
+    //     $event->save();
+    
+    //     return redirect()->route('events.index')->with('success', 'Event updated successfully.');
+    // }
+    
     public function update(Request $request, string $id)
-    {
-        // Validate the input
-        $this->validate($request, [
-            'event_name' => 'required|string|max:200', 
-            'event_description' => 'required|string|max:200000',
-        ]);
-    
-        $event = Events::find($id);
-    
-        if (!$event) {
-            return redirect()->route('events.index')->with('error', 'Event not found');
-        }
-    
-        $event->event_name = $request->input('event_name'); 
-        $event->event_description = $request->input('event_description');  
-    
-        $event->save();
-    
-        return redirect()->route('events.index')->with('success', 'Event updated successfully.');
+{
+    if (!Auth::check()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'User not authenticated.',
+        ], 401);
     }
+
+    $this->validate($request, [
+        'event_name' => 'required|string|max:200',
+        'event_description' => 'required|string|max:2000',
+        'questions' => 'nullable|array', 
+        'questions.*' => 'string|max:500',
+    ]);
+
+    $userId = Auth::id();
     
+    $event = Events::findOrFail($id);
+
+    $event->event_name = $request->input('event_name');
+    $event->event_description = $request->input('event_description');
+    $event->user_id = $userId;
+
+    try {
+        $event->save(); 
+        
+        EventForms::where('events_id', $event->id)->delete();
+
+        if ($request->has('questions') && is_array($request->input('questions'))) {
+            $questions = $request->input('questions');
+            
+            foreach ($questions as $question) {
+                EventForms::create([
+                    'questions' => $question,
+                    'events_id' => $event->id,  
+                    'user_id' => $userId,
+                ]);
+            }
+        }
+
+        return redirect()->route('events.index')->with('success', 'Event Updated Successfully');
+    } catch (\Exception $e) {
+        \Log::error('Error saving event or questions: ' . $e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred while saving your event. Please try again.',
+        ], 500);
+    }
+}
+
 
     /**
      * Remove the specified resource from storage.
@@ -144,6 +204,8 @@ class EventsController extends Controller
     {
         //
         $event=Events::find($id);
+        EventForms::where('events_id', $event->id)->delete();
+
         $event->delete();
         return redirect('/events')->with('success','event deleted');
     }

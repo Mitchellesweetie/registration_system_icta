@@ -43,7 +43,7 @@
 
                                 </div>
                                 @if ($errors->any())
-                                <div class="alert alert-danger">
+                                <div class="alert alert-danger alert-dismissible fade show">
                                     <ul>
                                         @foreach ($errors->all() as $error)
                                             <li>{{ $error }}</li>
@@ -51,14 +51,12 @@
                                     </ul>
                                 </div>
                             @elseif(session('success'))
-                                <div class="alert alert-success">
+                                <div class="alert alert-succes alert-dismissible fade show">
                                     <ul>
                                         <li>{{ session('success') }}</li>
                                     </ul>
                                 </div>
                             @endif
-                            
-
 
                                 <div class="form-body">
                                  <form class="row g-3" method="POST" action="{{route ('authregister')}}">

@@ -288,6 +288,21 @@
 
         
           <table class="table table-striped table-hover">
+            @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @elseif(session('success'))
+            <div class="alert alert-succes alert-dismissible fade show">
+                <ul>
+                    <li>{{ session('success') }}</li>
+                </ul>
+            </div>
+        @endif
             <thead>
               <tr>
                 <th scope="col">#</th>

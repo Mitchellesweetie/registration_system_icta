@@ -14,7 +14,7 @@ class EventForms extends Model
     // {
     //     return $this->belongsTo(User::class);
     // }
-    public function eventform()
+    public function eventforms()
     {
         return $this->belongsTo(Event::class,'events_id');
     }

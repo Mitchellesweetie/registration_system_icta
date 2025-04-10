@@ -60,7 +60,132 @@
           font-weight: 30px;
           font-style: normal;
         }
-    
+    /* Container for the whole form */
+.container-lg {
+    max-width: 900px;
+    margin: 0 auto;
+    margin-bottom:20px;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+.form-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #343a40;
+}
+
+.fw-bold {
+    font-weight: 700;
+}
+
+/* Input fields */
+.form-control {
+    border-radius: 5px;
+    box-shadow: none;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+}
+
+/* Focus state for inputs */
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Button Styles */
+/* .btn {
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 1rem;
+} */
+
+/* Primary Button */
+/* .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+} */
+
+/* .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+} */
+
+/* Secondary Button (for adding/removing questions) */
+/* .btn-outline-secondary {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #007bff;
+    color: #007bff;
+} */
+
+/* Button for Removing Question */
+/* .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+} */
+
+/* Question List Styles */
+#questionsList {
+    padding-left: 1.5rem;
+    margin-top: 15px;
+}
+
+#questionsList li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Question input & button alignment */
+
+
+/* Add Question Button */
+#addQuestion {
+    margin-top: 15px;
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+/* #addQuestion:hover {
+    background-color: #5a6268;
+} */
+
+/* Margin space for the form elements */
+.mb-3 {
+    margin-bottom: 1.5rem;
+}
+
+
+
+Form Title
+h1 {
+    font-size: 2rem;
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
 
     </style>
   </head>
@@ -232,22 +357,117 @@
       </header>
       <div class="body flex-grow-1">
         <div class="container-lg px-4">
-        
+          @if ($errors->any())
+          <div class="alert alert-danger alert-dismissible fade show">
+              <ul>
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+      @elseif(session('success'))
+          <div class="alert alert-succes alert-dismissible fade show">
+              <ul>
+                  <li>{{ session('success') }}</li>
+              </ul>
+          </div>
+      @endif
 
-            <form action="{{ route('events.update',$event->id) }}" method="POST">
-                @csrf
-                @method('PUT') 
-                <div class="mb-3">
+          <form action="{{ route('events.update', $event->id) }}" method="POST" style="overflow: auto">
+              @csrf
+              @method('PUT')
+              
+              <div class="mb-3">
                   <label for="eventName" class="form-label">Event Name</label>
-                  <input type="text" class="form-control" id="eventName" name="event_name" value="{{ $event-> event_name }}">
-                </div>
-                <div class="mb-3">
+                  <input type="text" class="form-control" id="eventName" name="event_name" value="{{ old('event_name', $event->event_name) }}">
+              </div>
+              
+              <div class="mb-3">
                   <label for="eventDescription" class="form-label">Event Description</label>
-                  <textarea class="form-control" id="eventDescription" name="event_description" rows="3"  value="{{ $event-> event_description}}" required>{{ $event-> event_description}}</textarea>
-                </div>
-            </div>
-              <button type="submit" class="btn " style="background: #007bff;color:white;">Save Event</button>
-            </form>
+                  <textarea class="form-control" id="eventDescription" name="event_description" rows="3" required>{{ old('event_description', $event->event_description) }}</textarea>
+              </div>
+      
+              <ol>
+                  <strong>Questions</strong>
+                  @foreach ($formQuestions as $eventForm)
+                      <li>
+                          <div class="last mb-3">
+                              <input type="text" class="form-control" name="questions[]" value="{{ $eventForm->questions }}">
+                          </div>
+                      </li>
+                  @endforeach
+              </ol>
+      
+              <button type="button" id="addQuestion" class="btn" style="background: #198754;">+ Add Question</button>
+              
+              <button type="submit" class="btn" style="background:#0d6efd;color:white;float:right;">Save Event</button>
+          </form>
+      
+          <script>
+              document.getElementById('addQuestion').addEventListener('click', function() {
+                  const questionsContainer = this.closest('form').querySelector('ol');
+                  const newQuestionDiv = document.createElement('li');
+                  newQuestionDiv.classList.add('mb-3');
+      
+                  const questionCount = questionsContainer.querySelectorAll('input[name="questions[]"]').length + 1;
+      
+                  newQuestionDiv.innerHTML = `
+                      <div class="last mb-3">
+                          <input type="text" class="form-control" name="questions[]" value="">
+                      </div>
+                  `;
+      
+                  questionsContainer.appendChild(newQuestionDiv);
+              });
+          </script>
+      </div>
+      
+       
+        {{-- <script>
+          document.addEventListener('DOMContentLoaded', function() {
+              // Get the 'Add Question' button
+              document.getElementById('addQuestion').addEventListener('click', function () {
+                  // Get the container where questions will be added
+                  const questionsList = document.getElementById('questionsList');
+                  
+                  if (!questionsList) {
+                      console.error('The "questionsList" container was not found.');
+                      return;
+                  }
+  
+                  // Create a new div element for the question
+                  const newQuestionDiv = document.createElement('div');
+                  newQuestionDiv.className = 'mb-3';
+  
+                  // Get the current number of questions to generate unique IDs for new questions
+                  const questionCount = questionsList.querySelectorAll('input[name="questions[]"]').length;
+  
+                  // Create the new question HTML structure
+                  newQuestionDiv.innerHTML = `
+                      <label for="question${questionCount}" class="form-label">Question ${questionCount + 1}</label>
+                      <div class="d-flex">
+                          <input type="text" class="form-control" id="question${questionCount}" name="questions[]" value="">
+                          <button type="button" class="btn btn-danger ms-2 remove-question">Remove</button>
+                      </div>
+                  `;
+  
+                  // Ensure newQuestionDiv is a valid DOM node
+                  console.log(newQuestionDiv);  // Debugging output
+  
+                  // Append the new question to the container (using appendChild)
+                  if (newQuestionDiv instanceof Node) {
+                      questionsList.appendChild(newQuestionDiv);
+                  } else {
+                      console.error('newQuestionDiv is not a valid DOM node!');
+                  }
+  
+                  // Add event listener to the remove button to delete the question
+                  newQuestionDiv.querySelector('.remove-question').addEventListener('click', function () {
+                      this.closest('.mb-3').remove();
+                  });
+              });
+          });
+      </script> --}}
           <div class="break"></div>
        
             
@@ -258,8 +478,10 @@
         
                       
        
-        </div> </div></div>
-        <footer class="footer" style="position: fixed; bottom: 0; width: 100%; display: flex; justify-content: center; align-items: center; color: grey; background-color: #f8f9fa; padding: 10px 0;">
+        </div>
+      </div>
+      
+        <footer class="footer" style="position:relative; bottom: 0; width: 100%; display: flex; justify-content: center; align-items: center; color: grey; background-color: #f8f9fa; padding: 10px 0; margin:auto;">
           {{-- <p style="margin: 0; color: grey;">xcapital&copy; 2024</p> --}}
       </footer>
       <script>

@@ -40,19 +40,17 @@
         </ul>
     </div>
 @endif
-{{-- @foreach ($event as $events) --}}
-{{-- <form method="POST" action="{{ route('questionsresponse', ['id' => $questions->id]) }}"> --}}
-  <form method="POST" action="{{ route('questionsresponse') }}">
+<form  method="POST" action="{{ route('questionsresponse')}}" id="responseForm">
+      {{-- <form action="" method="post"></form> --}}
+      @csrf
 
-
-      <h3 class="text-center mb-4">{{ $event->first()->event_name ?? 'Event' }}</h3>
-      <p class="text-center mb-4">{{ $event->first()->event_description ?? '' }}</p>
+      <h3 class="text-center mb-4">{{ $event->event_name ?? 'Event' }}</h3>
+      <p class="text-center mb-4">{{ $event->event_description ?? '' }}</p>
+      
       
       {{-- <input type="hidden" name="event_id" value="{{ $event->first()->id }}"> --}}
 
-      {{-- <form action="{{ url('postaction')}}" method="post"  > --}}
-      @csrf
-      @foreach ($event as $item)
+      @foreach ($questions as $item)
         <div class="mb-3">
           <label class="form-label">{{ $item->questions }}</label>
           <input type="text" class="form-control"         name="answers[{{ $item->id }}]"
@@ -64,7 +62,50 @@
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
     </form>
-    {{-- @endforeach --}}
-  </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      document.getElementById('responseForm').addEventListener('submit', function(event) {
+       event.preventDefault(); // ✅ This prevents the form from submitting normally
+
+  const form = this;
+  const formData = new FormData(form);
+
+  fetch("{{ route('questionsresponse') }}", {
+    method: "POST",
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+      'Accept': 'application/json'
+    },
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: data.message,
+      });
+      form.reset();
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops!',
+        text: data.message || 'Something went wrong!',
+      });
+    }
+  })
+  .catch(error => {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Something went wrong while submitting your responses.',
+    });
+    console.error(error);
+  });
+});
+
+    </script>
 </body>
 </html>

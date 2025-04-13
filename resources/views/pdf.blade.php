@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 5px;
+            margin: 10px;
         }
         .header {
             text-align: center;
@@ -44,33 +44,38 @@
 
     
 
-    @foreach ($groupedEvents as $eventGroup)
+    @foreach ($groupedEvents as $eventId => $eventGroup)
     <div class="header">
-        <strong> {{ $eventGroup->first()->event_name }} </strong> <br>
+        <strong>{{ $eventGroup->first()->event_name }}</strong><br>
     </div>
-        <div class="event-info">
-            
-            <strong>Description:</strong> {{ $eventGroup->first()->event_description }}
-        </div>
+    <div class="event-info">
+        <strong>Description:</strong> {{ $eventGroup->first()->event_description }}
+    </div>
 
-        <table class="questions-table">
-            <thead>
+    <table class="questions-table" border="1" cellspacing="0" cellpadding="5">
+        <thead>
+            <tr>
+                @foreach ($uniqueQuestions as $question)
+                    <th>{{ $question }}</th>
+                @endforeach
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($groupedResponses as $clientId => $answers)
                 <tr>
-                    @foreach ($eventGroup as $event)
-                        <th>{{ $event->questions }}</th>
+                    @foreach ($uniqueQuestions->keys() as $formId)
+                        @php
+                            $answer = $answers->firstWhere('form_id', $formId)->answer ?? 'N/A';
+                        @endphp
+                        <td>{{ $answer }}</td>
                     @endforeach
                 </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    @foreach ($eventGroup as $event)
-                        <td>{{ $event->answer ?? 'N/A' }}</td>
-                    @endforeach
-                </tr>
-            </tbody>
-        </table>
-        <br><br>
-    @endforeach
+            @endforeach
+        </tbody>
+    </table>
+
+    <br><br>
+@endforeach
 
     <div class="footer">
         Generated on: {{ now()->format('Y-m-d H:i:s') }}

@@ -94,13 +94,17 @@ class EventsController extends Controller
      * Display the specified resource.
      */
     public function show($id) {
-        $event = DB::table('events')->where('id', $id) ->first();
+        $event = DB::table('events')
+            ->where('id', $id)
+            ->first();
             
         if (!$event) {
             return redirect()->route('events.index')->with('error', 'Event not found.');
         }
         
-        $questions = DB::table('event_forms')->where('events_id', $id)->get();
+        $questions = DB::table('event_forms')
+            ->where('events_id', $id)
+            ->get();
     
         return view('pages.eventsedit', compact('event', 'questions'));
     }

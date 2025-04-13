@@ -44,6 +44,9 @@ class ResponseController extends Controller
         // return redirect()->route('events.index')
         // ->with('success', 'Thank you! Your responses have been saved.')
         // ->with('event',$event);
-        return redirect()->route('index')->with('success','Post Updated');
+        // return redirect()->route('index')->with('success','Post Updated');
+        return response()->json([
+            'success' => true,
+            'message' => 'Thank you! Your responses have been saved.',], 200); 
     }
 }

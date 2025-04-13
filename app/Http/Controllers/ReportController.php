@@ -13,9 +13,10 @@ class ReportController extends Controller
     public function download($id)
     {
         $event = DB::table('events')
-            ->leftjoin('event_forms', 'events.id', '=', 'event_forms.events_id')
-            ->leftjoin('client_responses', 'event_forms.id', '=', 'client_responses.event_forms_id')
-            ->select('events.event_name', 'events.event_description', 'event_forms.questions', 'client_responses.answer')
+            ->join('event_forms', 'events.id', '=', 'event_forms.events_id')
+            ->join('client_responses', 'event_forms.id', '=', 'client_responses.event_forms_id')
+            ->select('events.id as event_id','events.event_name', 'events.event_description', 
+               'event_forms.id as form_id','event_forms.questions', 'client_responses.answer','client_responses.id as client_id')
             ->where('events.id', $id)  
             ->get();
             
@@ -24,10 +25,13 @@ class ReportController extends Controller
         }
     
         $groupedEvents = $event->groupBy('event_id');
+        $uniqueQuestions = $event->pluck('questions','form_id')->unique();
+        $groupedResponses = $event->groupBy('client_id');
+
         $eventName = $event->first()->event_name;
 
     
-        $pdf = PDF::loadView('pdf', compact('groupedEvents'));
+        $pdf = PDF::loadView('pdf', compact('groupedEvents','uniqueQuestions','groupedResponses'));
     
         // return $pdf->download('event_' . $id . '.pdf');
         $filename = 'event_' . Str::slug($eventName) . '.pdf';

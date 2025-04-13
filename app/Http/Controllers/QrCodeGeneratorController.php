@@ -12,16 +12,16 @@ class QrCodeGeneratorController extends Controller
 {
   
     public function qrform($id)
-{
-    $event = DB::table('events')
-        ->leftjoin('event_forms', 'events.id', '=', 'event_forms.events_id')
-        ->leftjoin('client_responses', 'event_forms.id', '=', 'client_responses.event_forms_id')
-        ->select('events.event_name', 'events.event_description', 'event_forms.questions', 'client_responses.answer','event_forms.id')
-        ->where('events.id', $id)  
-        ->get();
-        
-    return view('pages.formqr', compact('event'));
-}
+    {
+        $event = DB::table('events')->where('id', $id)->first();
+    
+        $questions = DB::table('event_forms')
+            ->where('events_id', $id)
+            ->get();
+    
+        return view('pages.formqr', compact('event', 'questions'));
+    }
+    
 public function selected($id)
 {
     $event = DB::table('events')

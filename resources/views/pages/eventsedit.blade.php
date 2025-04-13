@@ -389,7 +389,7 @@ h1 {
       
               <ol>
                   <strong>Questions</strong>
-                  @foreach ($formQuestions as $eventForm)
+                  @foreach ($questions as $eventForm)
                       <li>
                           <div class="last mb-3">
                               <input type="text" class="form-control" name="questions[]" value="{{ $eventForm->questions }}">

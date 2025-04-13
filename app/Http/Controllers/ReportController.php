@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 
 class ReportController extends Controller
 {
@@ -22,10 +24,15 @@ class ReportController extends Controller
         }
     
         $groupedEvents = $event->groupBy('event_id');
+        $eventName = $event->first()->event_name;
+
     
         $pdf = PDF::loadView('pdf', compact('groupedEvents'));
     
-        return $pdf->download('event_' . $id . '.pdf');
+        // return $pdf->download('event_' . $id . '.pdf');
+        $filename = 'event_' . Str::slug($eventName) . '.pdf';
+
+        return $pdf->download($filename);
     }
     
 

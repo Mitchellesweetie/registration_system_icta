@@ -94,19 +94,15 @@ class EventsController extends Controller
      * Display the specified resource.
      */
     public function show($id) {
-        $event = DB::table('events')
-            ->where('id', $id)
-            ->first();
+        $event = DB::table('events')->where('id', $id) ->first();
             
         if (!$event) {
             return redirect()->route('events.index')->with('error', 'Event not found.');
         }
         
-        $formQuestions = DB::table('event_forms')
-            ->where('events_id', $id)
-            ->get();
+        $questions = DB::table('event_forms')->where('events_id', $id)->get();
     
-        return view('pages.eventsedit', compact('event', 'formQuestions'));
+        return view('pages.eventsedit', compact('event', 'questions'));
     }
 
     /**
@@ -122,27 +118,7 @@ class EventsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    // public function update(Request $request, string $id)
-    // {
-    //     // Validate the input
-    //     $this->validate($request, [
-    //         'event_name' => 'required|string|max:200', 
-    //         'event_description' => 'required|string|max:200000',
-    //     ]);
-    
-    //     $event = Events::find($id);
-    
-    //     if (!$event) {
-    //         return redirect()->route('events.index')->with('error', 'Event not found');
-    //     }
-    
-    //     $event->event_name = $request->input('event_name'); 
-    //     $event->event_description = $request->input('event_description');  
-    
-    //     $event->save();
-    
-    //     return redirect()->route('events.index')->with('success', 'Event updated successfully.');
-    // }
+   
     
     public function update(Request $request, string $id)
 {

@@ -66,7 +66,7 @@ Route::get('/event/{id}', [QrCodeGeneratorController::class, 'selected'])->middl
 
 
 //AnswerController
-Route::post('/postaction/{id}',[ResponseController::class,'questionsresponse'])->name('questionsresponse');
+Route::post('/postaction',[ResponseController::class,'questionsresponse'])->name('questionsresponse');
 
 
 

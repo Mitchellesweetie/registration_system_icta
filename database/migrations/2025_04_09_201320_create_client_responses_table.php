@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('client_responses', function (Blueprint $table) {
             $table->id();
             $table->text('answer');
-            $table->foreignId('events_id')->constrained()->onDelete('cascade');  
+            // $table->foreignId('events_id')->constrained()->onDelete('cascade');  
             $table->foreignId('event_forms_id')->constrained()->onDelete('cascade');  
       
 

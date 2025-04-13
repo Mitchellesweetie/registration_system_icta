@@ -16,7 +16,7 @@ class QrCodeGeneratorController extends Controller
     $event = DB::table('events')
         ->leftjoin('event_forms', 'events.id', '=', 'event_forms.events_id')
         ->leftjoin('client_responses', 'event_forms.id', '=', 'client_responses.event_forms_id')
-        ->select('events.event_name', 'events.event_description', 'event_forms.questions', 'client_responses.answer')
+        ->select('events.event_name', 'events.event_description', 'event_forms.questions', 'client_responses.answer','event_forms.id')
         ->where('events.id', $id)  
         ->get();
         

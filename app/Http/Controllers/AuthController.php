@@ -42,7 +42,6 @@ class AuthController extends Controller
             'confirm_password' => 'required|min:6'
         ]);
     
-        // Create a new user
         $user = new User;
         $user->name = $request->input('name');
         $user->email = $request->input('email');

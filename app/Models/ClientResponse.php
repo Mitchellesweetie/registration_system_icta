@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClientResponse extends Model
 {
     use HasFactory;
-    protected $fillable = ['answer', 'event_form_id', 'events_id'];
+    protected $fillable = ['answer', 'event_forms_id'];
 
     public function events()
     {

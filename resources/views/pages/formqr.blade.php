@@ -40,20 +40,23 @@
         </ul>
     </div>
 @endif
-@foreach ($event as $events)
-    <form  method="POST" action="{{ route('questionsresponse',$events->id)}}">
-      {{-- <form action="" method="post"></form> --}}
-      @csrf
+{{-- @foreach ($event as $events) --}}
+{{-- <form method="POST" action="{{ route('questionsresponse', ['id' => $questions->id]) }}"> --}}
+  <form method="POST" action="{{ route('questionsresponse') }}">
+
 
       <h3 class="text-center mb-4">{{ $event->first()->event_name ?? 'Event' }}</h3>
       <p class="text-center mb-4">{{ $event->first()->event_description ?? '' }}</p>
       
       {{-- <input type="hidden" name="event_id" value="{{ $event->first()->id }}"> --}}
 
+      {{-- <form action="{{ url('postaction')}}" method="post"  > --}}
+      @csrf
       @foreach ($event as $item)
         <div class="mb-3">
           <label class="form-label">{{ $item->questions }}</label>
-          <input type="text" class="form-control" name="answers" placeholder="Your answer..." required />
+          <input type="text" class="form-control"         name="answers[{{ $item->id }}]"
+          placeholder="Your answer..." required />
         </div>
       @endforeach
 
@@ -61,7 +64,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
     </form>
-    @endforeach
+    {{-- @endforeach --}}
   </div>
 </body>
 </html>

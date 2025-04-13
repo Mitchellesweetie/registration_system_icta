@@ -28,7 +28,7 @@ class PageController extends Controller
         ]);
         $userId = Auth::id(); 
         $eventId= Event::id();
-        // Create a new user
+        
         $event = new Events;
         $event->questions = $request->input('questions');
         $event->event_id=$eventId;
